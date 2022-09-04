@@ -1,0 +1,7 @@
+spring:
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017
+            database: cascade_save
+mongock:
+  migration-scan-package: com.cascade_save.config            
