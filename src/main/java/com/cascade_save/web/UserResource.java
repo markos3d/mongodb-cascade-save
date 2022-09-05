@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import com.cascade_save.service.UserService;
 @RequestMapping("/api")
 public class UserResource {
 
+    private final Logger logger = LoggerFactory.getLogger(UserResource.class);
+
     private final UserService userService;
 
     public UserResource(UserService userService) {
@@ -27,16 +31,16 @@ public class UserResource {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(this.userService.getAllUsers(), HttpStatus.OK);
+        List<User> users = this.userService.getAllUsers();
+        logger.debug("Request to load all users");
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user) throws URISyntaxException {
 
-        System.out.println("User data" + user);
-
+        logger.debug("Request to create new user", user);
         User theUser = this.userService.createUser(user);
-
         return ResponseEntity.created(new URI("/api/users" + theUser.getId())).body(theUser);
     }
 
